@@ -88,7 +88,7 @@ multi_letter_exts = ["_".join(filter(None, [e0, e1, e2, e3, e4]))
                      for e2 in z_ext("ifencei")
                      for e3 in z_ext("icond")
                      for e4 in x_ext("cheri")]
-known_architectures = sorted(set([e0 + e1 + e2 + e3 + e4 + e5 + e6 + e7 + e8 + e9
+known_architectures = sorted(set([e0 + e1 + e2 + e3 + e4 + e5 + e6 + e7 + e8 + e9 + e10
                                   for e0 in ["rv32i", "rv64i"]
                                   for e1 in std_ext("m")
                                   for e2 in std_ext("s")
@@ -96,9 +96,10 @@ known_architectures = sorted(set([e0 + e1 + e2 + e3 + e4 + e5 + e6 + e7 + e8 + e
                                   for e4 in std_ext("f")
                                   for e5 in std_ext("d")
                                   for e6 in std_ext("c")
-                                  for e7 in std_ext("n")
-                                  for e8 in std_ext("y")
-                                  for e9 in multi_letter_exts]
+                                  for e7 in std_ext("b")
+                                  for e8 in std_ext("n")
+                                  for e9 in std_ext("y")
+                                  for e10 in multi_letter_exts]
                                  + [e0 + e1 + e2 + e3
                                     for e0 in ["rv32g", "rv64g"]
                                     for e1 in std_ext("c")
@@ -280,7 +281,7 @@ class ISA_Configuration:
     self.std_extensions = parts[0][4:]
     self.ext_map = {}
     for letter in self.std_extensions:
-      if letter in ('i', 'm', 's', 'a', 'f', 'd', 'c', 'n', 'y'):
+      if letter in ('i', 'm', 's', 'a', 'f', 'd', 'c', 'b', 'n', 'y'):
         self.ext_map[letter] = True
       elif letter == 'g':
         # G enables imafd+icsr+ihpm+ifencei
@@ -509,6 +510,8 @@ def spawn_rvfi_dii_server(name, port, log, isa_def):
     if not isa_def.has("c"):
       #cmd += ["--disable-compressed"]
       cmd += ["-C"]
+    if isa_def.has("b"):
+      cmd += ["-B"]
     if isa_def.support_misaligned:
       #cmd += ["--enable-misaligned"]
       cmd += ["-m"]
