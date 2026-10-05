@@ -510,6 +510,8 @@ def spawn_rvfi_dii_server(name, port, log, isa_def):
     if not isa_def.has("c"):
       #cmd += ["--disable-compressed"]
       cmd += ["-C"]
+    if not isa_def.has("v"):
+      cmd += ["-W"]
     if isa_def.has("b"):
       cmd += ["-B"]
     if isa_def.support_misaligned:
