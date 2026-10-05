@@ -517,6 +517,8 @@ def spawn_rvfi_dii_server(name, port, log, isa_def):
     if isa_def.support_misaligned:
       #cmd += ["--enable-misaligned"]
       cmd += ["-m"]
+    # Disable writable misa
+    cmd += ["-I"]
     #cmd += ["--rvfi-dii", str(port)]
     cmd += ["-r", str(port)]
     cmd += ["-i"]
