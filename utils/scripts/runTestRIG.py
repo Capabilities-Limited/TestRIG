@@ -531,6 +531,10 @@ def spawn_rvfi_dii_server(name, port, log, isa_def):
     cmd = [args.path_to_muntjac]
   ##############################################################################
   elif name == 'cva6':
+    requires = ["b", "c"]
+    for ext in requires:
+      if (not(isa_def.has(ext))):
+        sys.exit(f"Running CVA6 without required extension '{ext}'. Terminating as this is likely to cause spurious counterexamples")
     env2["RVFI_DII_PORT"] = str(port)
     cmd = [args.path_to_cva6]
     # Port info
