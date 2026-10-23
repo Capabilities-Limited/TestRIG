@@ -402,20 +402,6 @@ class ISA_Configuration:
     result += "," + ",".join(ext_map.values())
     return result
 
-  def get_sail_name(self):
-    result = "riscv_rvfi"
-    #if self.has_icsr:
-    #  print("ERROR: Sail currently does not support CSRs.")
-    #  exit(-1)
-    #TODO check if there are other configurations that Sail does not yet support and throw an error.
-    if self.has_cheri or self.has("y"):
-      result = "cheri_" + result
-    if self.has_xlen_32:
-      result += "_RV32"
-    elif self.has_xlen_64:
-      result += "_RV64"
-    return result
-
 
 def verboseprint(lvl, msg):
   if args.verbosity >= lvl:
@@ -504,24 +490,11 @@ def spawn_rvfi_dii_server(name, port, log, isa_def):
       args.path_to_sail_riscv_dir = op.join(implementations_path, "sail-")
       if isa_def.has_cheri or isa_def.has("y"):
         args.path_to_sail_riscv_dir += "cheri-"
-      args.path_to_sail_riscv_dir += "riscv/c_emulator/"
-    full_sail_sim = op.join(op.dirname(op.realpath(__file__)), args.path_to_sail_riscv_dir, isa_def.get_sail_name())
+      args.path_to_sail_riscv_dir += "riscv/build/c_emulator/"
+    full_sail_sim = op.join(op.dirname(op.realpath(__file__)), args.path_to_sail_riscv_dir, "sail_riscv_sim")
     cmd = [full_sail_sim]
-    if not isa_def.has("c"):
-      #cmd += ["--disable-compressed"]
-      cmd += ["-C"]
-    if not isa_def.has("v"):
-      cmd += ["-W"]
-    if isa_def.has("b"):
-      cmd += ["-B"]
-    if isa_def.support_misaligned:
-      #cmd += ["--enable-misaligned"]
-      cmd += ["-m"]
-    # Disable writable misa
-    cmd += ["-I"]
-    #cmd += ["--rvfi-dii", str(port)]
+    cmd += ["--config", op.join(op.dirname(op.realpath(__file__)), args.path_to_sail_riscv_dir, "../../config/rv64-testrig.json")]
     cmd += ["-r", str(port)]
-    cmd += ["-i"]
   ##############################################################################
   elif name == 'ibex':
     cmd = [args.path_to_ibex, 'localhost', str(port)]

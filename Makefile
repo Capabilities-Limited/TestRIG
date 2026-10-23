@@ -186,7 +186,7 @@ sail-rv32-cheri:
 	$(MAKE) -C riscv-implementations/sail-cheri-riscv c_emulator/cheri_riscv_rvfi_RV32
 
 sail-rv64-cheri:
-	$(MAKE) -C riscv-implementations/sail-cheri-riscv c_emulator/cheri_riscv_rvfi_RV64
+	cd riscv-implementations/sail-cheri-riscv/ && ./build_simulators.sh
 
 ibex-rv32ic-cheri:
 	$(MAKE) -C riscv-implementations/ibex/verilator
